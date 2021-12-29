@@ -19,7 +19,7 @@ export const initMongoDB = async () => {
 
             await Promise.all(insertCollPromises);
 
-            Logger.info("Collections created and ready to be used");
+            Logger.info("MongoDD collections created and ready to be used");
 
             client.close();
 
