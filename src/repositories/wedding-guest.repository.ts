@@ -2,8 +2,7 @@ import { Guest } from "../models/guest";
 import { DBCollections, DBConfigurations } from '../database/mongodb-configurations';
 import { Logger } from '../utils/logger';
 import { BaseRepository } from "./base-repository";
-
-var MongoClient = require('mongodb').MongoClient;
+import { ObjectId } from "mongodb";
 
 export class WeddingGuestRepository extends BaseRepository {
 
@@ -43,6 +42,21 @@ export class WeddingGuestRepository extends BaseRepository {
             await super.commitTransaction();
 
             return guests;
+        } catch (error) {
+            await super.abortTransaction();
+            throw error;
+        }
+    }
+
+    public async deleteGuest(_id: string) {
+        try {
+            await super.startTransaction();
+
+            await this.database.collection(DBCollections.WEDDING_GUESTS).deleteOne({
+                _id: new ObjectId(_id)
+            }, this.options);
+
+            await super.commitTransaction();
         } catch (error) {
             await super.abortTransaction();
             throw error;

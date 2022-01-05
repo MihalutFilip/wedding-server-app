@@ -4,7 +4,7 @@ import { Guest } from '../models/guest';
 export const weddingGuestDocs: OpenAPIV3.PathsObject = {
   '/wedding-guests': {
     get: {
-      tags: ['wedding-guest'],
+      tags: ['wedding-guests'],
       operationId: 'getAllGuests',
       description: '',
       responses: {
@@ -45,7 +45,29 @@ export const weddingGuestDocs: OpenAPIV3.PathsObject = {
         },
         required: true,
       },
-    }
-  },
+    },
 
+  },
+  '/wedding-guests/{id}': {
+    delete: {
+      tags: ['wedding-guests'],
+      operationId: 'deleteGuest',
+      description: '',
+      responses: {
+        default: {
+          description: "Should delete guest on wedding",
+        },
+      },
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string'
+          }
+        }
+      ]
+    }
+  }
 };

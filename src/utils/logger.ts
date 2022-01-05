@@ -1,6 +1,6 @@
 class LogHelper {
-  public info = (msg: string): void => {
-    console.log(msg);
+  public info = (...msg: string[]): void => {
+    console.log(...msg);
   };
 
   public error = (msg: string): void => {
