@@ -2,7 +2,7 @@ import { OpenAPIV3 } from 'openapi-types';
 import { Guest } from '../models/guest';
 
 export const weddingGuestDocs: OpenAPIV3.PathsObject = {
-  '/wedding-guest': {
+  '/wedding-guests': {
     get: {
       tags: ['wedding-guest'],
       operationId: 'getAllGuests',
@@ -14,51 +14,38 @@ export const weddingGuestDocs: OpenAPIV3.PathsObject = {
       },
     },
     post: {
-      tags: ['wedding-guest'],
-      operationId: 'addGuest',
+      tags: ['wedding-guests'],
+      operationId: 'addOrUpdateGuests',
       description: '',
       responses: {
         default: {
-          description: "Should add a guest on wedding",
+          description: "Should add or update a list of guests on wedding",
         },
       },
       requestBody: {
         content: {
           'application/json': {
             schema: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  example: 'Mihalut Filip',
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                    example: 'Mihalut Filip',
+                  },
+                  confirmationType: {
+                    type: 'integer',
+                    example: '2',
+                  }
                 },
-                numberOfPersons: {
-                  type: 'integer',
-                  example: '3',
-                },
-                confirmationType: {
-                  type: 'integer',
-                  example: '2',
-                }
-              },
+              }
             },
           },
         },
         required: true,
       },
-      // parameters: [
-      //   {
-      //     "name": "body",
-      //     "paramType": "body",
-      //     "description": "body for the POST request",
-      //     "required": false
-      //   }
-      // ]
     }
   },
-
-};
-
-const createGuestBody = {
 
 };

@@ -1,25 +1,51 @@
 import { Guest } from "../models/guest";
 import { DBCollections, DBConfigurations } from '../database/mongodb-configurations';
 import { Logger } from '../utils/logger';
+import { BaseRepository } from "./base-repository";
 
 var MongoClient = require('mongodb').MongoClient;
 
-export class WeddingGuestRepository {
+export class WeddingGuestRepository extends BaseRepository {
 
-    public addGuest = async (guest: Guest) => {
-        const client = await MongoClient.connect(DBConfigurations.CONNECTION_STRING, { useNewUrlParser: true });
+    public async addOrUpdateGuests(guests: Guest[]) {
 
-        var database = client.db(DBConfigurations.DATABASE_NAME);
+        try {
+            await super.startTransaction();
 
-        var addedGuest = await database.collection(DBCollections.WEDDING_GUESTS).findOne({ name: guest.name });
+            for (var i = 0; i < guests.length; i++) {
+                const guest = guests[i];
 
-        if (addedGuest != null)
-            throw "Guest already added";
+                var query = guest._id ? { _id: guest._id } : { name: guest.name };
 
-        var addedGuest = await database.collection(DBCollections.WEDDING_GUESTS).insertOne(guest);
+                var addedGuest = await this.database.collection(DBCollections.WEDDING_GUESTS).findOne(query, this.options);
 
-        Logger.info("Guest added to collection");
+                if (addedGuest == null)
+                    await this.database.collection(DBCollections.WEDDING_GUESTS).insertOne(guest, this.options);
+                else
+                    await this.database.collection(DBCollections.WEDDING_GUESTS).updateOne(query, { $set: guest }, this.options);
+            }
 
-        return addedGuest;
+            await super.commitTransaction();
+
+            Logger.info("Guest added to collection");
+        } catch (error) {
+            await super.abortTransaction();
+            throw error;
+        }
+    }
+
+    public async getAllGuests() {
+        try {
+            await super.startTransaction();
+
+            var guests = await this.database.collection(DBCollections.WEDDING_GUESTS).find({}, this.options).toArray();
+
+            await super.commitTransaction();
+
+            return guests;
+        } catch (error) {
+            await super.abortTransaction();
+            throw error;
+        }
     }
 }
