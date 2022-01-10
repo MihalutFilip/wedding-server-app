@@ -47,8 +47,8 @@ export class Server {
     // Initialize the Mongo Database before starting the app
     await initMongoDB();
 
-    this.app.listen(serverConfig.PORT, () => {
-      console.log('Server started successfully on port ' + serverConfig.PORT);
-    });
+    this.app.listen(3000, "192.168.0.130", () => {
+      console.log('Server started successfully on ' + "192.168.0.130:" + serverConfig.PORT + "/api/docs/");
+    })
   };
 }
