@@ -1,6 +1,8 @@
+import { serverConfig } from '../configs/server.config';
+
 export class DBConfigurations {
     public static readonly DATABASE_NAME: string = 'Wedding';
-    public static readonly CONNECTION_STRING: string = "mongodb+srv://filip:mongodb@cluster0.hjvfp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+    public static readonly CONNECTION_STRING: string = <string>serverConfig.DATABASE_URI;
 }
 
 export const DBCollections = {
