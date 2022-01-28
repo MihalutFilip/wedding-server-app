@@ -5,6 +5,8 @@ export const initMongoDB = async () => {
 
     var MongoClient = require('mongodb').MongoClient;
 
+    Logger.info("Trying to connect on ", DBConfigurations.CONNECTION_STRING);
+
     await MongoClient.connect(DBConfigurations.CONNECTION_STRING, async function (err: any, client: any) {
         try {
             if (err) throw err;
