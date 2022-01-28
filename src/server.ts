@@ -9,6 +9,7 @@ import { operations } from './controllers';
 import { serverConfig } from './configs/server.config';
 import helmet from 'helmet';
 import { initMongoDB } from './database/mongodb-init';
+import { Logger } from './utils/logger';
 
 export class Server {
   private app: express.Application;
@@ -46,13 +47,11 @@ export class Server {
 
     // Initialize the Mongo Database before starting the app
     await initMongoDB();
-    this.app.get('*', (req, res) => {
-      res.send("Hy");
-    });
 
+    Logger.info(`I'm trying to connect on the port:::::::${serverConfig.PORT}`);
 
     this.app.listen(serverConfig.PORT, () => {
-      console.log(`running server on from port:::::::${serverConfig.PORT}`);
+      Logger.info(`Running server on from port:::::::${serverConfig.PORT}`);
     });
 
     // this.app.listen(3000, "192.168.0.130", () => {
