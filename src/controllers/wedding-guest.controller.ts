@@ -69,7 +69,7 @@ export class WeddingGuestController {
         return guest;
       }));
 
-      res.status(200).send("Guests was added and updated");
+      res.status(200).send({ message: "Guests was added and updated" });
     } catch (e) {
       res.status(this.getErrorCode(e)).send(e);
     }
