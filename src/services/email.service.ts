@@ -32,6 +32,7 @@ export class EmailService {
             } else {
                 console.log('Email sent: ' + info.response);
             }
+            
         });
     }
 
