@@ -7,27 +7,23 @@ import { GuestAlreadyAddedError, GuestNotFoundError } from "../errors/guest-erro
 
 export class WeddingGuestRepository extends BaseRepository {
 
-    public async addOrUpdateGuests(guests: Guest[]) {
+    public async addOrUpdateGuests(guest: Guest) {
 
         try {
             await super.startTransaction();
 
-            for (var i = 0; i < guests.length; i++) {
-                const guest = guests[i];
+            var query = guest._id ? { _id: new ObjectId(guest._id) } : { name: guest.name };
 
-                var query = guest._id ? { _id: new ObjectId(guest._id) } : { name: guest.name };
+            var addedGuest = await this.database.collection(DBCollections.WEDDING_GUESTS).findOne(query, this.options);
 
-                var addedGuest = await this.database.collection(DBCollections.WEDDING_GUESTS).findOne(query, this.options);
-
-                if (addedGuest == null)
-                    await this.database.collection(DBCollections.WEDDING_GUESTS).insertOne(guest, this.options);
-                else
-                    await this.database.collection(DBCollections.WEDDING_GUESTS).updateOne(query, { $set: guest }, this.options);
-            }
+            if (addedGuest == null)
+                await this.database.collection(DBCollections.WEDDING_GUESTS).insertOne(guest, this.options);
+            else
+                await this.database.collection(DBCollections.WEDDING_GUESTS).updateOne(query, { $set: guest }, this.options);
 
             await super.commitTransaction();
 
-            Logger.info("Guests were added and updated.");
+            Logger.info("Guest was updated.");
         } catch (error) {
             await super.abortTransaction();
             throw error;

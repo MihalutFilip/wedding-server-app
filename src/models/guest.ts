@@ -5,4 +5,5 @@ export interface Guest {
     name: string;
     confirmationType: ConfirmationType;
     isChild: boolean;
+    message?: string;
 }

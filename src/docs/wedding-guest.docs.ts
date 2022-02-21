@@ -86,38 +86,39 @@ export const weddingGuestDocs: OpenAPIV3.PathsObject = {
     },
 
   },
-  '/wedding-guests/addOrUpdateMultiple': {
+  '/wedding-guests/addOrUpdate': {
     post: {
       tags: ['wedding-guests'],
-      operationId: 'addOrUpdateGuests',
+      operationId: 'addOrUpdateGuest',
       description: '',
       responses: {
         default: {
-          description: "Should add or update a list of guests on wedding",
+          description: "Should add or update a guest on wedding with email confirmation",
         },
       },
       requestBody: {
         content: {
           'application/json': {
             schema: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  name: {
-                    type: 'string',
-                    example: 'Mihalut Filip',
-                  },
-                  confirmationType: {
-                    type: 'integer',
-                    example: '2',
-                  },
-                  isChild: {
-                    type: 'boolean',
-                    example: 'false',
-                  }
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  example: 'Mihalut Filip',
                 },
-              }
+                confirmationType: {
+                  type: 'integer',
+                  example: '2',
+                },
+                isChild: {
+                  type: 'boolean',
+                  example: 'false',
+                },
+                message: {
+                  type: 'string',
+                  example: 'Happy wedding'
+                }
+              },
             },
           },
         },

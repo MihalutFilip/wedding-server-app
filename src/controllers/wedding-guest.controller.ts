@@ -2,13 +2,18 @@ import { Request, Response } from 'express';
 import { Guest } from 'src/models/guest';
 import { StringHelper } from '../utils/string-helper';
 import { WeddingGuestRepository } from '../repositories/wedding-guest.repository';
-import { GuestError, GuestNotFoundError } from '../errors/guest-errors';
+import { GuestError } from '../errors/guest-errors';
+import { EmailService } from '../services/email.service';
+
+
 
 export class WeddingGuestController {
   private weddingRepository: WeddingGuestRepository;
+  private emailService: EmailService;
 
   constructor() {
     this.weddingRepository = new WeddingGuestRepository();
+    this.emailService = new EmailService();
   }
 
   public getGuest = async (req: Request, res: Response): Promise<void> => {
@@ -59,15 +64,17 @@ export class WeddingGuestController {
     }
   };
 
-  public addOrUpdateGuests = async (req: Request, res: Response): Promise<void> => {
-    var guests = req.body;
+  public addOrUpdateGuest = async (req: Request, res: Response): Promise<void> => {
+    var guest = req.body;
 
     try {
-      await this.weddingRepository.addOrUpdateGuests(guests.map((guest: Guest) => {
-        guest.name = StringHelper.firstToUpperAndRestToLower(guest.name);
+      guest.name = StringHelper.firstToUpperAndRestToLower(guest.name);
 
-        return guest;
-      }));
+      this.emailService.sendEmail(guest);
+
+      await this.weddingRepository.addOrUpdateGuests(guest);
+
+      
 
       res.status(200).send({ message: "Guests was added and updated" });
     } catch (e) {
